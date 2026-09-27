@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, type RefObject } from 'react';
 
 /**
- * Scroll-reveal: observes every `.reveal` element once and adds `.in` when it
- * enters the viewport. Mirrors the v4 mockup's IntersectionObserver behaviour.
- * Falls back to showing everything if IO is unavailable; the global
- * `prefers-reduced-motion` rule in index.css disables the transition itself.
+ * Scroll-reveal scoped to one container: every `.reveal` inside `ref` gets
+ * `.in` the first time it enters the viewport. Scoped (rather than global) so
+ * lazily-hydrated sections register themselves when they mount.
+ * The hidden state only applies under `html.js`, and index.css disables the
+ * motion entirely for prefers-reduced-motion.
  */
-export function useReveal() {
+export function useReveal(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>('.reveal');
+    const root = ref.current;
+    if (!root) return;
+    const els = root.querySelectorAll<HTMLElement>('.reveal');
 
     if (!('IntersectionObserver' in window)) {
       els.forEach((el) => el.classList.add('in'));
@@ -24,10 +27,10 @@ export function useReveal() {
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
 
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [ref]);
 }

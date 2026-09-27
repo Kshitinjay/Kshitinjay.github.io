@@ -1,10 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'  // This is needed for Tailwind CSS
+import { StrictMode } from 'react';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import './fonts.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import App from './App.tsx';
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+const root = document.getElementById('root')!;
+const app = (
+  <StrictMode>
     <App />
-  </React.StrictMode>,
-)
+  </StrictMode>
+);
+
+// Production HTML is pre-rendered (scripts/prerender.mjs) → hydrate it.
+// In dev the root only holds a placeholder comment → render from scratch.
+if (root.firstElementChild) hydrateRoot(root, app);
+else createRoot(root).render(app);

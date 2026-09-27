@@ -1,53 +1,46 @@
 # Kshitinjay Kumar — Portfolio
 
-Personal portfolio for a frontend engineer building the real-time interfaces of AI products.
-Single-page, light/airy editorial design (the **v4** theme): warm white + a single coral accent,
-with a signature `agent · runtime` pipeline panel that will later host an "Ask me anything"
-assistant.
+Personal portfolio of a Senior Software Engineer (Frontend & Full-stack) building the real-time
+interfaces of AI products. Single page, dark by default with a light theme, coral + sky accents,
+an animated `agent · runtime` pipeline and a local "Ask about me" assistant that streams answers
+token by token.
 
-**Live:** https://kshitinjay.github.io/KshitinjayPortfolio/
+**Live:** https://kshitinjay.github.io/
 
 ## Stack
 
-- **Vite + React 18 + TypeScript**
-- **Tailwind CSS** — tokens are mapped to the v4 CSS variables defined in `src/index.css`;
-  bespoke pieces (the pipeline panel, the editorial work grid) live in a global `@layer components`
-  driven by those same variables, so the rendered output matches the approved design exactly.
-- Native **IntersectionObserver** scroll reveal (`src/hooks/useReveal.ts`) — no animation library.
-- Deployed to **GitHub Pages** via GitHub Actions on push to `master`.
+- **Vite + React 18 + TypeScript**, **Tailwind CSS** (theme tokens are CSS variables in
+  `src/index.css`, switched by `<html data-theme>`)
+- **Pre-rendered** at build time: `src/entry-server.tsx` + `scripts/prerender.mjs` inject the full
+  page HTML into `dist/index.html`; the client hydrates it. Below-the-fold sections are lazy chunks.
+- Self-hosted fonts (Bricolage Grotesque, Inter, JetBrains Mono — latin subsets)
+- `lucide-react` icons; CSS + IntersectionObserver motion (no animation library), fully disabled
+  under `prefers-reduced-motion`
+- Deployed to **GitHub Pages** (user site, served from the root `/`) by GitHub Actions on push to `master`
 
-## Structure
+## Editing content
 
-```
-src/
-  App.tsx                  single-page composition
-  index.css                design tokens (:root) + base + bespoke component layer
-  hooks/useReveal.ts       scroll-reveal IntersectionObserver
-  components/
-    Header.tsx             sticky minimal header (+ mobile menu)
-    Footer.tsx             mono footer
-    RuntimePanel.tsx       the `agent · runtime` signature panel (mock assistant)
-    sections/              Hero, Work, Stack, About, Contact
-  data/                    work.ts, stack.ts, assistantMock.ts  (centralised content)
-```
+All copy lives in typed files under `src/data/` — no component changes needed:
 
-The `data/` content doubles as the seed for the future assistant's knowledge base.
+| File | Content |
+|---|---|
+| `profile.ts` | name, role, pitch, contact links, hero stats, about, education, nav |
+| `experience.ts` | timeline entries |
+| `projects.ts` | project cards (`GITHUB_REPO_PLACEHOLDER` — swap in real repo URLs) |
+| `skills.ts` | grouped skill cards |
+| `assistant.ts` | "Ask about me" intents (keywords → answer), suggestions, fallback |
+
+The résumé button links to `public/resume.pdf`.
 
 ## Scripts
 
 ```bash
-npm run dev       # local dev server
-npm run build     # type-check + production build to dist/
-npm run preview   # serve the production build locally
+npm run dev       # dev server at http://localhost:5173/ (client-rendered)
+npm run build     # type-check, client + SSR build, prerender into dist/
+npm run preview   # serve the production build at http://localhost:4173/
+npm run lint
 ```
 
-## Design source of truth
-
-The approved design is `kshitinjay-portfolio-v4.html`. Decisions and the long-term AI-assistant
-roadmap are documented alongside the project; the migration plan is in `THEME-MIGRATION-PLAN.md`.
-
-## Roadmap
-
-The `agent · runtime` panel currently runs a local mock with a typewriter reveal. The `respond()`
-seam in `RuntimePanel.tsx` is the integration point for a future streamed backend (Node + Gemini),
-swappable without layout changes.
+The site is served from the root everywhere (dev, preview and production). The old
+`/KshitinjayPortfolio/` URL is kept as a tiny redirect page (`public/KshitinjayPortfolio/index.html`)
+so previously shared links forward to `/`, preserving any `#section`.
