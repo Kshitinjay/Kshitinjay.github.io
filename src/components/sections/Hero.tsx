@@ -60,7 +60,7 @@ const Hero = () => {
                 View Projects
                 <ArrowRight aria-hidden="true" />
               </a>
-              <a href={profile.resumeUrl} download className="btn btn-secondary">
+              <a href={profile.resumeUrl} download={profile.resumeFileName} className="btn btn-secondary">
                 <Download aria-hidden="true" />
                 Download Résumé
               </a>

@@ -1,3 +1,7 @@
+// Vite fingerprints the file (e.g. /assets/…-a1b2c3.pdf), so replacing the PDF
+// always ships the new version instead of a cached copy.
+import resumePdf from '../assets/Kshitinjay Resume 15Sep 5Yrs.pdf';
+
 export interface Stat {
   value: string;
   label: string;
@@ -25,8 +29,10 @@ export const profile = {
   linkedinLabel: 'linkedin.com/in/kshitinjaykumar',
   github: 'https://github.com/Kshitinjay',
   githubLabel: 'github.com/Kshitinjay',
-  /** Place the PDF at public/resume.pdf — BASE_URL keeps the GitHub Pages path. */
-  resumeUrl: `${import.meta.env.BASE_URL}resume.pdf`,
+  /** To update: replace the PDF in src/assets and change the import above. */
+  resumeUrl: resumePdf,
+  /** Name the file is saved as when downloaded. */
+  resumeFileName: 'Kshitinjay-Kumar-Resume.pdf',
 
   stats: [
     { value: '5+', label: 'years experience' },

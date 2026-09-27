@@ -107,7 +107,11 @@ const Header = () => {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a href={profile.resumeUrl} download className="btn btn-primary btn-sm hidden sm:inline-flex">
+          <a
+            href={profile.resumeUrl}
+            download={profile.resumeFileName}
+            className="btn btn-primary btn-sm hidden sm:inline-flex"
+          >
             <Download aria-hidden="true" />
             Download Résumé
           </a>
@@ -141,7 +145,7 @@ const Header = () => {
             <li className="mt-2 sm:hidden">
               <a
                 href={profile.resumeUrl}
-                download
+                download={profile.resumeFileName}
                 onClick={() => setOpen(false)}
                 className="btn btn-primary w-full"
               >

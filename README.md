@@ -30,7 +30,8 @@ All copy lives in typed files under `src/data/` — no component changes needed:
 | `skills.ts` | grouped skill cards |
 | `assistant.ts` | "Ask about me" intents (keywords → answer), suggestions, fallback |
 
-The résumé button links to `public/resume.pdf`.
+The résumé buttons download `src/assets/Kshitinjay Resume 15Sep 5Yrs.pdf` (imported in `profile.ts`,
+saved as `Kshitinjay-Kumar-Resume.pdf`). To update it, replace the PDF and adjust that import.
 
 ## Scripts
 
