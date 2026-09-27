@@ -50,6 +50,64 @@ const KanbanArt = () => {
   );
 };
 
+const WeddingArt = () => {
+  const events = ['Haldi', 'Mehndi', 'Sangeet', 'Wedding', 'Vidai', 'Reception'];
+  const roles = ['Super Admin', 'Admin', 'Organizer', 'Vendor', 'Guest'];
+  return (
+    <div className="flex h-full flex-col justify-center gap-3">
+      <div className="rounded-xl border border-line/80 bg-bg/50 p-3">
+        <div className="mb-2.5 flex items-center justify-between font-mono text-[0.625rem] text-muted sm:text-[0.6875rem]">
+          <span>Events</span>
+          <span className="h-1.5 w-10 rounded-full bg-fg/10" />
+        </div>
+        <ol className="grid grid-cols-3 gap-1.5 sm:grid-cols-6">
+          {events.map((e, i) => (
+            <li
+              key={e}
+              className={`flex flex-col items-center gap-1 rounded-lg border px-1 py-2 font-mono text-[0.5625rem] sm:text-[0.625rem] ${
+                e === 'Wedding' ? 'border-accent/60 bg-accent/15 text-accent' : 'border-line bg-surface text-muted'
+              }`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${i < 3 ? 'bg-accent-2' : e === 'Wedding' ? 'bg-accent' : 'bg-line'}`} />
+              {e}
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div className="grid grid-cols-[1.1fr_1fr] gap-3">
+        <div className="space-y-2 rounded-xl border border-line bg-surface p-3">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[0.625rem] text-muted">RSVP</span>
+            <span className="rounded-full bg-emerald-400/15 px-1.5 py-0.5 font-mono text-[0.5625rem] text-emerald-700 dark:text-emerald-300">
+              attending
+            </span>
+          </div>
+          {['85%', '65%', '75%'].map((w, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span className={`grid h-3.5 w-3.5 place-items-center rounded-[4px] ${i === 1 ? 'border border-line' : 'bg-accent'}`}>
+                {i !== 1 && <span className="h-1 w-1.5 -rotate-45 border-b-2 border-l-2 border-on-accent" />}
+              </span>
+              <span className="block h-1.5 rounded-full bg-fg/15" style={{ width: w }} />
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-wrap content-center gap-1.5 rounded-xl border border-line/80 bg-bg/50 p-3">
+          {roles.map((r, i) => (
+            <span
+              key={r}
+              className={`rounded-md border px-1.5 py-0.5 font-mono text-[0.5625rem] ${
+                i === 0 ? 'border-accent-2/60 bg-accent-2/15 text-accent-2' : 'border-line bg-surface text-muted'
+              }`}
+            >
+              {r}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PipelineArt = () => {
   const stages = ['Applied', 'Screen', 'Interview', 'Final', 'Offer'];
   return (
@@ -119,6 +177,7 @@ const DonorArt = () => (
 
 const ART: Record<ArtKind, () => JSX.Element> = {
   kanban: KanbanArt,
+  wedding: WeddingArt,
   pipeline: PipelineArt,
   donor: DonorArt,
 };

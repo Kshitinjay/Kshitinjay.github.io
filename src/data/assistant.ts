@@ -11,6 +11,8 @@ export interface AssistantLink {
 export interface AssistantIntent {
   id: string;
   keywords: string[];
+  /** Names that identify this topic outright; each outweighs several generic keywords. */
+  strong?: string[];
   answer: string;
   link?: AssistantLink;
 }
@@ -59,13 +61,27 @@ export const intents: AssistantIntent[] = [
       'Real-time is most of my current work: build progress tracking over Server-Sent Events with retry handling and conflict resolution, chat and voice testing with Socket.IO and WebRTC, a streaming LLM chat UI, and @xyflow/react + dagre flow diagrams that handle 20+ nodes with live updates during voice calls.',
   },
   {
+    id: 'current',
+    strong: ['shadi', 'asaan', 'wedding', 'marriage'],
+    keywords: [
+      'working on', 'currently', 'building', 'current project', 'latest project', 'right now',
+      'these days', 'side project',
+    ],
+    answer:
+      "Right now I'm building Shadi Asaan, a full-stack wedding planning platform: one workspace for events, tasks, guests and RSVP, vendors and payments. It has five scoped roles (Super Admin, Admin, Organizer with 16 granular permissions, Vendor and Guest), phone + PIN sign-in with bcrypt and rotating JWT refresh tokens, and HMAC-derived invitation links. Stack: React, TypeScript, Redux Toolkit, Node.js, Express 5 and MongoDB. The repo is private, so I'm happy to walk you through it.",
+    link: {
+      label: 'Request a walkthrough',
+      href: 'mailto:kshitinjay20@gmail.com?subject=Shadi%20Asaan%20walkthrough',
+    },
+  },
+  {
     id: 'projects',
     keywords: [
       'project', 'projects', 'portfolio', 'built', 'build', 'side', 'kanban', 'naukri', 'blood',
       'demo', 'demos', 'app', 'apps',
     ],
     answer:
-      'Three projects, all with live demos: Kanban — a team task tracker (React 19, TypeScript, Redux Toolkit, @dnd-kit, Node.js, MongoDB) with JWT admin/member roles, a drag-and-drop board and a KPI dashboard; Naukri Board — a full-stack job application tracker across 5+ interview stages; and Blood Finder — a mobile-first donor search by blood group and location.',
+      "Four projects: Kanban — a team task tracker (React 19, TypeScript, Redux Toolkit, @dnd-kit, Node.js, MongoDB) with JWT admin/member roles, a drag-and-drop board and a KPI dashboard; Shadi Asaan — a full-stack wedding planning platform I'm building now; Naukri Board — a full-stack job application tracker across 5+ interview stages; and Blood Finder — a mobile-first donor search by blood group and location. Kanban, Naukri Board and Blood Finder have live demos.",
     link: { label: 'See the projects', href: '#projects' },
   },
   {
@@ -143,6 +159,7 @@ export const suggestions: SuggestedQuestion[] = [
   { label: 'AI work', question: 'What AI work have you done?' },
   { label: 'Real-time', question: 'Tell me about your real-time work' },
   { label: 'Projects', question: 'What projects have you built?' },
+  { label: 'Current project', question: 'What are you working on right now?' },
   { label: 'Backend', question: 'Do you do backend work?' },
   { label: 'Notice period', question: 'Are you available? What is your notice period?' },
 ];
@@ -157,11 +174,9 @@ export function matchIntent(question: string): AssistantIntent {
 
   for (const intent of intents) {
     let score = 0;
-    for (const kw of intent.keywords) {
-      if (new RegExp(`(^|[^a-z0-9])${escape(kw)}($|[^a-z0-9])`).test(q)) {
-        score += kw.includes(' ') ? 2 : 1;
-      }
-    }
+    const hit = (kw: string) => new RegExp(`(^|[^a-z0-9])${escape(kw)}($|[^a-z0-9])`).test(q);
+    for (const kw of intent.keywords) if (hit(kw)) score += kw.includes(' ') ? 2 : 1;
+    for (const kw of intent.strong ?? []) if (hit(kw)) score += 3;
     if (score > bestScore) {
       best = intent;
       bestScore = score;

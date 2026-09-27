@@ -2,7 +2,7 @@
 export const GITHUB_REPO_PLACEHOLDER = 'https://github.com/Kshitinjay';
 
 /** Selects the CSS/SVG illustration rendered on the card. */
-export type ProjectArt = 'kanban' | 'pipeline' | 'donor';
+export type ProjectArt = 'kanban' | 'wedding' | 'pipeline' | 'donor';
 
 export interface Project {
   title: string;
@@ -10,10 +10,17 @@ export interface Project {
   problem: string;
   outcomes: string[];
   tags: string[];
-  liveUrl: string;
-  repoUrl: string;
+  /** Omit for projects without a public deployment. */
+  liveUrl?: string;
+  /** Omit for private repositories. */
+  repoUrl?: string;
   art: ProjectArt;
+  /** Featured projects render as full-width cards, in array order. */
   featured?: boolean;
+  /** Pill above a featured card's title. */
+  badge?: string;
+  /** Shown instead of the link buttons when there is no public link. */
+  privateNote?: string;
 }
 
 export const projects: Project[] = [
@@ -32,6 +39,23 @@ export const projects: Project[] = [
     repoUrl: GITHUB_REPO_PLACEHOLDER,
     art: 'kanban',
     featured: true,
+    badge: 'Featured project',
+  },
+  {
+    title: 'Shadi Asaan',
+    kind: 'Wedding planning platform · Full-stack',
+    problem:
+      'One workspace for a whole wedding — events, tasks, guests and RSVP, vendors and payments — where every person sees only what their role allows.',
+    outcomes: [
+      'Five scoped roles — Super Admin, Admin, Organizer with 16 granular permissions, Vendor and Guest',
+      'Phone + PIN sign-in with bcrypt, rotating JWT refresh tokens, lockout after five wrong PINs and HMAC-derived invitation links',
+      'Per-member guest RSVP, and vendor contracts whose payment tracking refuses overpayment',
+    ],
+    tags: ['React', 'TypeScript', 'Redux Toolkit', 'React Hook Form', 'Zod', 'Node.js', 'Express 5', 'MongoDB', 'Vitest'],
+    art: 'wedding',
+    featured: true,
+    badge: 'In development',
+    privateNote: 'Private repository — happy to walk you through the code.',
   },
   {
     title: 'Naukri Board',
